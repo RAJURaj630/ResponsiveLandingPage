@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Enhanced Responsive Landing Page - Raj Gupta</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background: #f0f2f5;
+      color: #2c3e50;
+      line-height: 1.6;
+    }
+
+    /* Enhanced Navigation with Fixed Position */
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(30, 30, 30, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 18px 25px;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 1000;
+      border-bottom: 2px solid transparent;
+    }
+
+    /* Scrolled state */
+    .navbar.scrolled {
+      background: rgba(17, 17, 17, 0.98);
+      backdrop-filter: blur(20px);
+      padding: 12px 25px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      border-bottom: 2px solid #00bcd4;
+    }
+
+    .navbar.scrolled .logo {
+      color: #00bcd4;
+      transform: scale(0.95);
+    }
+
+    .logo {
+      font-size: 1.6rem;
+      color: #f8f8f8;
+      font-weight: 700;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .logo::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #00bcd4, #673ab7);
+      transition: width 0.3s ease;
+      border-radius: 2px;
+    }
+
+    .logo:hover::after {
+      width: 100%;
+    }
+
+    .nav-links {
+      list-style: none;
+      display: flex;
+      gap: 8px;
+    }
+
+    .nav-links li {
+      position: relative;
+    }
+
+    .nav-links li a {
+      text-decoration: none;
+      color: #f1f1f1;
+      font-weight: 500;
+      padding: 10px 18px;
+      border-radius: 25px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+      display: block;
+    }
+
+    /* Hover effects */
+    .nav-links li a::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+      transition: left 0.6s ease;
+    }
+
+    .nav-links li a:hover::before {
+      left: 100%;
+    }
+
+    .nav-links li a:hover {
+      color: #00bcd4;
+      background: rgba(0, 188, 212, 0.1);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0, 188, 212, 0.3);
+    }
+
+    /* Active link styling */
+    .nav-links li a.active {
+      background: linear-gradient(135deg, #00bcd4, #0097a7);
+      color: white;
+      box-shadow: 0 5px 15px rgba(0, 188, 212, 0.4);
+    }
+
+    /* Scrolled state hover effects */
+    .navbar.scrolled .nav-links li a:hover {
+      background: rgba(103, 58, 183, 0.1);
+      color: #673ab7;
+      box-shadow: 0 8px 25px rgba(103, 58, 183, 0.3);
+    }
+
+    .navbar.scrolled .nav-links li a.active {
+      background: linear-gradient(135deg, #673ab7, #512da8);
+    }
+
+    /* Mobile Menu Toggle */
+    .mobile-toggle {
+      display: none;
+      flex-direction: column;
+      cursor: pointer;
+      padding: 8px;
+      border-radius: 8px;
+      transition: background 0.3s ease;
+    }
+
+    .mobile-toggle:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .mobile-toggle span {
+      width: 25px;
+      height: 3px;
+      background: #f1f1f1;
+      margin: 3px 0;
+      border-radius: 2px;
+      transition: all 0.3s ease;
+    }
+
+    .navbar.scrolled .mobile-toggle span {
+      background: #00bcd4;
+    }
+
+    /* Content adjustment for fixed navbar */
+    .hero {
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #673ab7, #512da8, #00bcd4);
+      background-size: 300% 300%;
+      animation: gradientShift 8s ease infinite;
+      color: white;
+      text-align: center;
+      padding: 30px;
+      margin-top: 0;
+    }
+
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero h1 {
+      font-size: 3.5rem;
+      margin-bottom: 20px;
+      opacity: 0;
+      transform: translateY(30px);
+      animation: fadeInUp 1s ease 0.5s forwards;
+    }
+
+    .hero p {
+      font-size: 1.4rem;
+      margin-bottom: 30px;
+      opacity: 0;
+      transform: translateY(30px);
+      animation: fadeInUp 1s ease 0.7s forwards;
+    }
+
+    .btn {
+      background: rgba(255, 255, 255, 0.9);
+      color: #673ab7;
+      padding: 14px 28px;
+      border-radius: 30px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: all 0.3s ease;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+      opacity: 0;
+      transform: translateY(30px);
+      animation: fadeInUp 1s ease 0.9s forwards;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      transition: left 0.6s ease;
+    }
+
+    .btn:hover::before {
+      left: 100%;
+    }
+
+    .btn:hover {
+      background: white;
+      color: #512da8;
+      transform: translateY(-3px);
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.3);
+    }
+
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .about {
+      padding: 80px 20px;
+      background: #fff;
+      text-align: center;
+      position: relative;
+    }
+
+    .about::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #673ab7, #00bcd4);
+    }
+
+    .about h2 {
+      font-size: 2.5rem;
+      margin-bottom: 30px;
+      color: #333;
+      position: relative;
+    }
+
+    .about h2::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 4px;
+      background: linear-gradient(90deg, #673ab7, #00bcd4);
+      border-radius: 2px;
+    }
+
+    .about p {
+      font-size: 1.2rem;
+      max-width: 600px;
+      margin: 0 auto;
+      color: #555;
+      line-height: 1.8;
+    }
+
+    /* Services Section */
+    .services {
+      padding: 80px 20px;
+      background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+      text-align: center;
+    }
+
+    .services h2 {
+      font-size: 2.5rem;
+      margin-bottom: 50px;
+      color: #333;
+      position: relative;
+    }
+
+    .services h2::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 4px;
+      background: linear-gradient(90deg, #673ab7, #00bcd4);
+      border-radius: 2px;
+    }
+
+    .service-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .service-card {
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+      border: 2px solid transparent;
+    }
+
+    .service-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+      border-color: #00bcd4;
+    }
+
+    .service-card h3 {
+      color: #673ab7;
+      margin-bottom: 15px;
+      font-size: 1.5rem;
+    }
+
+    footer {
+      text-align: center;
+      padding: 30px 20px;
+      background: #1e1e1e;
+      color: #e0e0e0;
+      font-size: 0.9rem;
+    }
+
+    /* Scroll Progress Bar */
+    .progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #673ab7, #00bcd4);
+      z-index: 1001;
+      transition: width 0.1s ease;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .mobile-toggle {
+        display: flex;
+      }
+
+      .nav-links {
+        position: fixed;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        background: rgba(17, 17, 17, 0.98);
+        backdrop-filter: blur(20px);
+        flex-direction: column;
+        padding: 20px;
+        gap: 10px;
+        transform: translateY(-100vh);
+        transition: transform 0.4s ease;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .nav-links.active {
+        transform: translateY(0);
+      }
+
+      .nav-links li a {
+        padding: 12px 20px;
+        text-align: center;
+        border-radius: 10px;
+      }
+
+      .hero h1 {
+        font-size: 2.5rem;
+      }
+
+      .hero p {
+        font-size: 1.1rem;
+      }
+
+      .service-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Mobile menu animation */
+    .mobile-toggle.active span:nth-child(1) {
+      transform: rotate(45deg) translate(5px, 5px);
+    }
+
+    .mobile-toggle.active span:nth-child(2) {
+      opacity: 0;
+    }
+
+    .mobile-toggle.active span:nth-child(3) {
+      transform: rotate(-45deg) translate(7px, -6px);
+    }
+  </style>
+</head>
+<body>
+  <!-- Progress Bar -->
+  <div class="progress-bar" id="progressBar"></div>
+
+  <header>
+    <nav class="navbar" id="navbar">
+      <div class="logo" id="logo">Raj Gupta</div>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#home" class="active">Home</a></li>
+        <li><a href="#services">Services</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+      <div class="mobile-toggle" id="mobileToggle">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </nav>
+  </header>
+
+  <section class="hero" id="home">
+    <div class="hero-content">
+      <h1>Welcome to My Enhanced Landing Page</h1>
+      <p>Built with Advanced HTML, CSS & JavaScript during Prodigy InfoTech Internship</p>
+      <a href="#about" class="btn">Discover More</a>
+    </div>
+  </section>
+
+  <section class="services" id="services">
+    <h2>My Services</h2>
+    <div class="service-grid">
+      <div class="service-card">
+        <h3>Web Development</h3>
+        <p>Creating responsive and interactive websites using modern HTML, CSS, and JavaScript techniques.</p>
+      </div>
+      <div class="service-card">
+        <h3>UI/UX Design</h3>
+        <p>Designing user-friendly interfaces with focus on user experience and modern design principles.</p>
+      </div>
+      <div class="service-card">
+        <h3>Frontend Development</h3>
+        <p>Building dynamic and engaging frontend applications with the latest web technologies.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="about" id="about">
+    <h2>About Me</h2>
+    <p>I'm Raj Gupta, a passionate Web Development Intern specializing in creating beautiful, responsive, and interactive web experiences. Currently learning advanced HTML, CSS, JavaScript, and modern web development practices to build amazing digital solutions.</p>
+  </section>
+
+  <footer id="contact">
+    <p>&copy; 2025 Raj Gupta. All rights reserved. | Enhanced Interactive Navigation Demo</p>
+  </footer>
+
+  <script>
+    // Get DOM elements
+    const navbar = document.getElementById('navbar');
+    const navLinks = document.getElementById('navLinks');
+    const mobileToggle = document.getElementById('mobileToggle');
+    const progressBar = document.getElementById('progressBar');
+    const navItems = document.querySelectorAll('.nav-links a');
+
+    // Scroll event for navbar transformation
+    let ticking = false;
+
+    function updateNavbar() {
+      const scrolled = window.pageYOffset;
+      const scrollThreshold = 50;
+      
+      // Toggle scrolled class
+      if (scrolled > scrollThreshold) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
+
+      // Update progress bar
+      const windowHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const scrollPercent = (scrolled / windowHeight) * 100;
+      progressBar.style.width = Math.min(scrollPercent, 100) + '%';
+      
+      ticking = false;
+    }
+
+    function requestTick() {
+      if (!ticking) {
+        requestAnimationFrame(updateNavbar);
+        ticking = true;
+      }
+    }
+
+    window.addEventListener('scroll', requestTick);
+
+    // Mobile menu toggle
+    mobileToggle.addEventListener('click', () => {
+      navLinks.classList.toggle('active');
+      mobileToggle.classList.toggle('active');
+    });
+
+    // Smooth scrolling and active link management
+    navItems.forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const targetId = link.getAttribute('href');
+        
+        if (targetId.startsWith('#')) {
+          const targetElement = document.querySelector(targetId);
+          if (targetElement) {
+            const offsetTop = targetElement.offsetTop - 80;
+            
+            window.scrollTo({
+              top: offsetTop,
+              behavior: 'smooth'
+            });
+          }
+        }
+
+        // Update active link
+        navItems.forEach(l => l.classList.remove('active'));
+        link.classList.add('active');
+
+        // Close mobile menu
+        navLinks.classList.remove('active');
+        mobileToggle.classList.remove('active');
+      });
+    });
+
+    // Update active link based on scroll position
+    function updateActiveLink() {
+      const sections = document.querySelectorAll('section[id]');
+      const scrollPos = window.pageYOffset + 150;
+
+      sections.forEach(section => {
+        const sectionTop = section.offsetTop;
+        const sectionHeight = section.offsetHeight;
+        const sectionId = section.getAttribute('id');
+
+        if (scrollPos >= sectionTop && scrollPos < sectionTop + sectionHeight) {
+          navItems.forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('href') === '#' + sectionId) {
+              link.classList.add('active');
+            }
+          });
+        }
+      });
+    }
+
+    window.addEventListener('scroll', updateActiveLink);
+
+    // Close mobile menu when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!navbar.contains(e.target)) {
+        navLinks.classList.remove('active');
+        mobileToggle.classList.remove('active');
+      }
+    });
+
+    // Logo click to scroll to top
+    document.getElementById('logo').addEventListener('click', () => {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    });
+
+    // Add entrance animation on load
+    window.addEventListener('load', () => {
+      navbar.style.transform = 'translateY(-100%)';
+      setTimeout(() => {
+        navbar.style.transition = 'transform 0.8s ease';
+        navbar.style.transform = 'translateY(0)';
+      }, 100);
+    });
+
+    // Parallax effect for hero section
+    window.addEventListener('scroll', () => {
+      const scrolled = window.pageYOffset;
+      const hero = document.querySelector('.hero');
+      const parallaxSpeed = 0.5;
+      
+      hero.style.transform = `translateY(${scrolled * parallaxSpeed}px)`;
+    });
+  </script>
+</body>
+</html>
